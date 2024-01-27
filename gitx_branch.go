@@ -1,7 +1,10 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"path/filepath"
+	"time"
 )
 
 type BranchType uint8
@@ -161,6 +164,31 @@ func (b *Branch) CheckoutToBugfix(name string) error {
 	}
 
 	bn := "bugfix/" + name
+
+	if err := b.git.CreateBranch(bn); err != nil {
+		return err
+	}
+
+	if err := b.stack.Push(bn); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b *Branch) CheckoutToDaily() error {
+	if err := b.checkBranchIsClean(); err != nil {
+		return err
+	}
+
+	r := make([]byte, 64)
+	if _, err := rand.Read(r); err != nil {
+		return err
+	}
+
+	today := time.Now().Format("20060102")
+
+	bn := "daily/" + today + "-" + hex.EncodeToString(r)
 
 	if err := b.git.CreateBranch(bn); err != nil {
 		return err
