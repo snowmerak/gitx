@@ -30,7 +30,7 @@ func GenerateSSHKey(path string, name string) error {
 		return fmt.Errorf("failed to create .gitx directory: %w", err)
 	}
 
-	privateKeyFile, err := os.Create(filepath.Join(path, gitxFolder, name+"prv.pem"))
+	privateKeyFile, err := os.Create(filepath.Join(path, gitxFolder, name+".prv.pem"))
 	if err != nil {
 		return fmt.Errorf("failed to create private key file: %w", err)
 	}
