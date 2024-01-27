@@ -87,12 +87,12 @@ func (b *BranchStack) Len() int {
 	return len(b.stack)
 }
 
-func (b *BranchStack) Top() string {
+func (b *BranchStack) Top() (string, bool) {
 	if len(b.stack) == 0 {
-		return ""
+		return "", false
 	}
 
-	return b.stack[len(b.stack)-1]
+	return b.stack[len(b.stack)-1], true
 }
 
 func (b *BranchStack) String() string {
