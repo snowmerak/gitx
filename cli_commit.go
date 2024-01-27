@@ -66,7 +66,7 @@ var commitChangesAction = func(_ *kingpin.ParseContext) error {
 
 	changes := FormatChangesList(status)
 
-	log.Info().Msg(changes)
+	log.Info().Msg("changes\n" + changes)
 
 	return nil
 }
