@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"github.com/pelletier/go-toml/v2"
 )
 
@@ -87,4 +88,22 @@ func ReadGitxConfig(path string) (Config, error) {
 	}
 
 	return cfg, nil
+}
+
+func GetAuthKeyFromConfig(path string) (*ssh.PublicKeys, error) {
+	cfg, err := ReadGitxConfig(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read gitx config: %w", err)
+	}
+
+	if cfg.SSHKeyFile == "" {
+		return nil, fmt.Errorf("no SSH key file specified")
+	}
+
+	key, err := ReadSSHKeyFrom(cfg.SSHKeyFile, "")
+	if err != nil {
+		return nil, fmt.Errorf("failed to read SSH key file: %w", err)
+	}
+
+	return key, nil
 }
