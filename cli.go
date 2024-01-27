@@ -67,7 +67,6 @@ func NewCli() *Cli {
 	forkCommandArgBranchName = cli.Fork.Bugfix.Arg("name", "Name of the bugfix branch").Required().String()
 
 	cli.Fork.Daily = forkCommand.Command("daily", "Fork a daily branch").Action(forkDailyAction)
-	forkCommandArgBranchName = cli.Fork.Daily.Arg("name", "Name of the daily branch").Required().String()
 
 	cli.Fork.Revert = forkCommand.Command("revert", "Revert a branch").Action(forkRevertAction)
 
