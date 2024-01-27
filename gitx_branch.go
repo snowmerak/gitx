@@ -68,11 +68,30 @@ func NewBranch(path string, git *Git) (*Branch, error) {
 	}, nil
 }
 
-func (b *Branch) Checkout(branch string) error {
-	return b.stack.Push(branch)
+type BranchIsNotCleanError struct{}
+
+func (e *BranchIsNotCleanError) Error() string {
+	return "branch is not clean"
+}
+
+func (b *Branch) checkBranchIsClean() error {
+	st, err := b.git.Status()
+	if err != nil {
+		return err
+	}
+
+	if !st.IsClean() {
+		return &BranchIsNotCleanError{}
+	}
+
+	return nil
 }
 
 func (b *Branch) CheckoutToFeature(name string) error {
+	if err := b.checkBranchIsClean(); err != nil {
+		return err
+	}
+
 	bn := "feature/" + name
 
 	if err := b.git.CreateBranch(bn); err != nil {
@@ -87,6 +106,10 @@ func (b *Branch) CheckoutToFeature(name string) error {
 }
 
 func (b *Branch) CheckoutToProposal(name string) error {
+	if err := b.checkBranchIsClean(); err != nil {
+		return err
+	}
+
 	bn := "proposal/" + name
 
 	if err := b.git.CreateBranch(bn); err != nil {
@@ -101,6 +124,10 @@ func (b *Branch) CheckoutToProposal(name string) error {
 }
 
 func (b *Branch) CheckoutToHotfix(name string) error {
+	if err := b.checkBranchIsClean(); err != nil {
+		return err
+	}
+
 	bn := "hotfix/" + name
 
 	if err := b.git.CreateBranch(bn); err != nil {
@@ -115,6 +142,10 @@ func (b *Branch) CheckoutToHotfix(name string) error {
 }
 
 func (b *Branch) CheckoutToBugfix(name string) error {
+	if err := b.checkBranchIsClean(); err != nil {
+		return err
+	}
+
 	bn := "bugfix/" + name
 
 	if err := b.git.CreateBranch(bn); err != nil {
