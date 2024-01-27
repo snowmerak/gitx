@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/pelletier/go-toml/v2"
 	"os"
 	"path/filepath"
+
+	"github.com/pelletier/go-toml/v2"
 )
 
 const (
 	gitxFolder         = ".gitx"
 	gitxConfigFileName = "gitx.toml"
+	gitxBranchDir      = "branches"
 
 	gitIgnoreFileName = ".gitignore"
 )
@@ -18,7 +20,7 @@ type Config struct {
 	SSHKeyFile string
 }
 
-func appendGitignore(path string) error {
+func AppendGitignore(path string) error {
 	f, err := os.OpenFile(filepath.Join(path, gitIgnoreFileName), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to open .gitignore: %w", err)
@@ -32,7 +34,7 @@ func appendGitignore(path string) error {
 	return nil
 }
 
-func writeGitxConfig(path string, config Config) error {
+func WriteGitxConfig(path string, config Config) error {
 	if err := os.MkdirAll(filepath.Join(path, gitxFolder), 0755); err != nil {
 		return fmt.Errorf("failed to create .gitx directory: %w", err)
 	}
@@ -51,7 +53,7 @@ func writeGitxConfig(path string, config Config) error {
 	return nil
 }
 
-func readGitxConfig(path string) (Config, error) {
+func ReadGitxConfig(path string) (Config, error) {
 	cfg := Config{}
 
 	f, err := os.Open(filepath.Join(path, gitxFolder, gitxConfigFileName))
