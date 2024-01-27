@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 func main() {
 	g, err := NewGit(".", nil)
 	if err != nil {
@@ -12,6 +14,24 @@ func main() {
 	}
 
 	if err := b.CheckoutToFeature("test"); err != nil {
+		panic(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if err := b.CheckoutToProposal("test"); err != nil {
+		panic(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if err := b.ReturnToPrevious(); err != nil {
+		panic(err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	if err := b.ReturnToPrevious(); err != nil {
 		panic(err)
 	}
 }
