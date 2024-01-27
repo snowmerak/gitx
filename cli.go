@@ -69,7 +69,7 @@ func NewCli() *Cli {
 	cli.Fork.Daily = forkCommand.Command("daily", "Fork a daily branch").Action(forkDailyAction)
 	forkCommandArgBranchName = cli.Fork.Daily.Arg("name", "Name of the daily branch").Required().String()
 
-	cli.Fork.Revert = forkCommand.Command("revert", "Fork a revert branch").Action(forkRevertAction)
+	cli.Fork.Revert = forkCommand.Command("revert", "Revert a branch").Action(forkRevertAction)
 
 	cli.Pull = kingpin.Command("pull", "Pull changes from remote").Action(commitPullAction)
 
