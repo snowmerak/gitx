@@ -129,6 +129,17 @@ func (g *Git) CreateBranch(branch string) error {
 	return nil
 }
 
+func (g *Git) GetCurrentBranch() (string, error) {
+	r := g.Repository
+
+	ref, err := r.Head()
+	if err != nil {
+		return "", fmt.Errorf("failed to get head: %w", err)
+	}
+
+	return ref.Name().Short(), nil
+}
+
 func (g *Git) CheckoutBranch(branch string) error {
 	r := g.Repository
 
