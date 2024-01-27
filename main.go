@@ -1,21 +1,17 @@
 package main
 
-import (
-	"fmt"
-)
-
 func main() {
 	g, err := NewGit(".", nil)
 	if err != nil {
 		panic(err)
 	}
 
-	st, err := g.Status()
+	b, err := NewBranch(".", g)
 	if err != nil {
 		panic(err)
 	}
 
-	for k, v := range st {
-		fmt.Println(k, byte(v.Staging), byte(v.Worktree))
+	if err := b.CheckoutToFeature("test"); err != nil {
+		panic(err)
 	}
 }
