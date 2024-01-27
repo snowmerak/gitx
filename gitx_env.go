@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -20,7 +21,27 @@ type Config struct {
 	SSHKeyFile string
 }
 
-func AppendGitignore(path string) error {
+func CheckGitiIgnore(path string) error {
+	f, err := os.Open(filepath.Join(path, gitIgnoreFileName))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return fmt.Errorf("failed to open .gitignore: %w", err)
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if scanner.Text() == gitxFolder {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("gitx is not ignored")
+}
+
+func AppendGitIgnore(path string) error {
 	f, err := os.OpenFile(filepath.Join(path, gitIgnoreFileName), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to open .gitignore: %w", err)
