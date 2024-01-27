@@ -166,16 +166,16 @@ func (e *BranchStackIsHeadError) Error() string {
 }
 
 func (b *Branch) ReturnToPrevious() error {
+	if _, err := b.stack.Pop(); err != nil {
+		return err
+	}
+
 	branch, ok := b.stack.Top()
 	if !ok {
 		return &BranchStackIsHeadError{}
 	}
 
 	if err := b.git.CheckoutBranch(branch); err != nil {
-		return err
-	}
-
-	if _, err := b.stack.Pop(); err != nil {
 		return err
 	}
 
