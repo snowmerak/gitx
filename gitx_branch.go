@@ -93,14 +93,14 @@ func (e *BranchIsNotCleanError) Error() string {
 }
 
 func (b *Branch) checkBranchIsClean() error {
-	st, err := b.git.Status()
-	if err != nil {
-		return err
-	}
+	// st, err := b.git.Status()
+	// if err != nil {
+	// 	return err
+	// }
 
-	if !st.IsClean() {
-		return &BranchIsNotCleanError{}
-	}
+	// if !st.IsClean() {
+	// 	return &BranchIsNotCleanError{}
+	// }
 
 	return nil
 }
