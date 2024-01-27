@@ -1,6 +1,8 @@
 package main
 
-import "path/filepath"
+import (
+	"path/filepath"
+)
 
 type BranchType uint8
 
@@ -57,7 +59,8 @@ type Branch struct {
 }
 
 func NewBranch(path string, git *Git) (*Branch, error) {
-	stack, err := NewBranchStack(filepath.Join(path, gitxFolder, gitxBranchDir))
+	bd := filepath.Join(path, gitxFolder, gitxBranchDir)
+	stack, err := NewBranchStack(bd)
 	if err != nil {
 		return nil, err
 	}
