@@ -16,6 +16,7 @@ const (
 	BranchHotfix
 	BranchBugfix
 	BranchProposal
+	BranchDaily
 )
 
 func (b BranchType) String() string {
