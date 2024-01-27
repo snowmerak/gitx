@@ -6,12 +6,13 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"os"
 	"path/filepath"
+
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
-func readSSHKeyFrom(file, password string) (*ssh.PublicKeys, error) {
+func ReadSSHKeyFrom(file, password string) (*ssh.PublicKeys, error) {
 	if _, err := os.Stat(file); os.IsNotExist(err) {
 		return nil, fmt.Errorf("private key file %s does not exist", file)
 	}
@@ -24,7 +25,7 @@ func readSSHKeyFrom(file, password string) (*ssh.PublicKeys, error) {
 	return keys, nil
 }
 
-func generateSSHKey(path string, name string) error {
+func GenerateSSHKey(path string, name string) error {
 	if err := os.MkdirAll(filepath.Join(path, gitxFolder), 0755); err != nil {
 		return fmt.Errorf("failed to create .gitx directory: %w", err)
 	}

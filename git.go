@@ -3,11 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
+	"strings"
+
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
-	"path/filepath"
-	"strings"
 )
 
 type Git struct {
@@ -16,7 +17,7 @@ type Git struct {
 	Repository *git.Repository
 }
 
-func clone(url string, authKey *ssh.PublicKeys) (*Git, error) {
+func Clone(url string, authKey *ssh.PublicKeys) (*Git, error) {
 	option := &git.CloneOptions{
 		URL:               url,
 		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
