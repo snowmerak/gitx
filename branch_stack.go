@@ -50,9 +50,9 @@ func (b *BranchStack) Push(branch string) error {
 		return err
 	}
 
-	if err := b.file.Sync(); err != nil {
-		return err
-	}
+	// if err := b.file.Sync(); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
@@ -81,9 +81,9 @@ func (b *BranchStack) Pop() (string, error) {
 		}
 	}
 
-	if err := b.file.Sync(); err != nil {
-		return "", err
-	}
+	// if err := b.file.Sync(); err != nil {
+	// 	return "", err
+	// }
 
 	return last, nil
 }
