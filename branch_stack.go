@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -11,8 +12,16 @@ type BranchStack struct {
 	stack []string
 }
 
+const (
+	branchStackFileName = "stack.txt"
+)
+
 func NewBranchStack(path string) (*BranchStack, error) {
-	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
+	if err := os.MkdirAll(path, 0755); err != nil {
+		return nil, err
+	}
+
+	f, err := os.OpenFile(filepath.Join(path, branchStackFileName), os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		return nil, err
 	}
