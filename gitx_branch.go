@@ -65,6 +65,17 @@ func NewBranch(path string, git *Git) (*Branch, error) {
 		return nil, err
 	}
 
+	if stack.Len() == 0 {
+		currentBranchName, err := git.GetCurrentBranch()
+		if err != nil {
+			return nil, err
+		}
+
+		if err := stack.Push(currentBranchName); err != nil {
+			return nil, err
+		}
+	}
+
 	return &Branch{
 		stack: stack,
 		git:   git,
@@ -169,16 +180,25 @@ func (e *BranchStackIsHeadError) Error() string {
 }
 
 func (b *Branch) ReturnToPrevious() error {
-	if _, err := b.stack.Pop(); err != nil {
-		return err
-	}
-
-	branch, ok := b.stack.Top()
+	current, ok := b.stack.Top()
 	if !ok {
 		return &BranchStackIsHeadError{}
 	}
 
-	if err := b.git.CheckoutBranch(branch); err != nil {
+	if _, err := b.stack.Pop(); err != nil {
+		return err
+	}
+
+	previous, ok := b.stack.Top()
+	if !ok {
+		return &BranchStackIsHeadError{}
+	}
+
+	if err := b.git.CheckoutBranch(previous); err != nil {
+		return err
+	}
+
+	if err := b.git.DeleteBranch(current); err != nil {
 		return err
 	}
 
