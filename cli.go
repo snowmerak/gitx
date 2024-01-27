@@ -27,6 +27,12 @@ type Cli struct {
 		Daily    *kingpin.CmdClause
 		Revert   *kingpin.CmdClause
 	}
+
+	Pull *kingpin.CmdClause
+
+	Push *kingpin.CmdClause
+
+	Changes *kingpin.CmdClause
 }
 
 func NewCli() *Cli {
@@ -64,6 +70,13 @@ func NewCli() *Cli {
 	forkCommandArgBranchName = cli.Fork.Daily.Arg("name", "Name of the daily branch").Required().String()
 
 	cli.Fork.Revert = forkCommand.Command("revert", "Fork a revert branch").Action(forkRevertAction)
+
+	cli.Pull = kingpin.Command("pull", "Pull changes from remote").Action(commitPullAction)
+
+	cli.Push = kingpin.Command("push", "Push changes to remote").Action(commitPushAction)
+	commitPushArgMessage = cli.Push.Arg("message", "Commit message").Required().String()
+
+	cli.Changes = kingpin.Command("changes", "Show changes").Action(commitChangesAction)
 
 	return cli
 }
