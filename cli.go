@@ -18,6 +18,15 @@ type Cli struct {
 	SSH struct {
 		Generate *kingpin.CmdClause
 	}
+
+	Fork struct {
+		Feature  *kingpin.CmdClause
+		Proposal *kingpin.CmdClause
+		Hotfix   *kingpin.CmdClause
+		Bugfix   *kingpin.CmdClause
+		Daily    *kingpin.CmdClause
+		Revert   *kingpin.CmdClause
+	}
 }
 
 func NewCli() *Cli {
@@ -36,6 +45,25 @@ func NewCli() *Cli {
 
 	cli.SSH.Generate = sshCommand.Command("generate", "Generate SSH key").Action(sshGenerateAction)
 	sshGenerateArgName = cli.SSH.Generate.Arg("name", "Name of the SSH key").Required().String()
+
+	forkCommand := kingpin.Command("fork", "Manage branches")
+
+	cli.Fork.Feature = forkCommand.Command("feature", "Fork a feature branch").Action(forkFeatureAction)
+	forkCommandArgBranchName = cli.Fork.Feature.Arg("name", "Name of the feature branch").Required().String()
+
+	cli.Fork.Proposal = forkCommand.Command("proposal", "Fork a proposal branch").Action(forkProposalAction)
+	forkCommandArgBranchName = cli.Fork.Proposal.Arg("name", "Name of the proposal branch").Required().String()
+
+	cli.Fork.Hotfix = forkCommand.Command("hotfix", "Fork a hotfix branch").Action(forkHotfixAction)
+	forkCommandArgBranchName = cli.Fork.Hotfix.Arg("name", "Name of the hotfix branch").Required().String()
+
+	cli.Fork.Bugfix = forkCommand.Command("bugfix", "Fork a bugfix branch").Action(forkBugfixAction)
+	forkCommandArgBranchName = cli.Fork.Bugfix.Arg("name", "Name of the bugfix branch").Required().String()
+
+	cli.Fork.Daily = forkCommand.Command("daily", "Fork a daily branch").Action(forkDailyAction)
+	forkCommandArgBranchName = cli.Fork.Daily.Arg("name", "Name of the daily branch").Required().String()
+
+	cli.Fork.Revert = forkCommand.Command("revert", "Fork a revert branch").Action(forkRevertAction)
 
 	return cli
 }
