@@ -90,3 +90,28 @@ func AddAllWorkedFiles(g *Git) error {
 
 	return nil
 }
+
+func CommitAllWorkedFiles(g *Git, message string) error {
+	w, err := g.Repository.Worktree()
+	if err != nil {
+		return err
+	}
+
+	if _, err := w.Add("."); err != nil {
+		return err
+	}
+
+	if err = g.Commit(message); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func PushToRemote(g *Git) error {
+	if err := g.Push(); err != nil {
+		return err
+	}
+
+	return nil
+}
