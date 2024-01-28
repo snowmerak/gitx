@@ -143,6 +143,10 @@ func (g *Git) GetCurrentBranch() (string, error) {
 func (g *Git) CheckoutBranch(branch string) error {
 	r := g.Repository
 
+	if err := r.Fetch(&git.FetchOptions{}); err != nil {
+		return fmt.Errorf("failed to fetch: %w", err)
+	}
+
 	w, err := r.Worktree()
 	if err != nil {
 		return fmt.Errorf("failed to get worktree: %w", err)
