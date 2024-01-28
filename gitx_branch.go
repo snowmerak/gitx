@@ -93,14 +93,14 @@ func (e *BranchIsNotCleanError) Error() string {
 }
 
 func (b *Branch) checkBranchIsClean() error {
-	// st, err := b.git.Status()
-	// if err != nil {
-	// 	return err
-	// }
+	st, err := b.git.Status()
+	if err != nil {
+		return err
+	}
 
-	// if !st.IsClean() {
-	// 	return &BranchIsNotCleanError{}
-	// }
+	if !st.IsClean() {
+		return &BranchIsNotCleanError{}
+	}
 
 	return nil
 }
@@ -182,7 +182,7 @@ func (b *Branch) CheckoutToDaily() error {
 		return err
 	}
 
-	r := make([]byte, 64)
+	r := make([]byte, 16)
 	if _, err := rand.Read(r); err != nil {
 		return err
 	}
