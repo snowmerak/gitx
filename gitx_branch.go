@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"path/filepath"
 	"time"
 )
 
@@ -58,31 +57,12 @@ func (b BranchType) Short() string {
 }
 
 type Branch struct {
-	git   *Git
-	stack *BranchStack
+	git *Git
 }
 
 func NewBranch(path string, git *Git) (*Branch, error) {
-	bd := filepath.Join(path, gitxFolder, gitxBranchDir)
-	stack, err := NewBranchStack(bd)
-	if err != nil {
-		return nil, err
-	}
-
-	if stack.Len() == 0 {
-		currentBranchName, err := git.GetCurrentBranch()
-		if err != nil {
-			return nil, err
-		}
-
-		if err := stack.Push(currentBranchName); err != nil {
-			return nil, err
-		}
-	}
-
 	return &Branch{
-		stack: stack,
-		git:   git,
+		git: git,
 	}, nil
 }
 
@@ -116,10 +96,6 @@ func (b *Branch) CheckoutToFeature(name string) error {
 		return err
 	}
 
-	if err := b.stack.Push(bn); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -131,10 +107,6 @@ func (b *Branch) CheckoutToProposal(name string) error {
 	bn := "proposal/" + name
 
 	if err := b.git.CreateBranch(bn); err != nil {
-		return err
-	}
-
-	if err := b.stack.Push(bn); err != nil {
 		return err
 	}
 
@@ -152,10 +124,6 @@ func (b *Branch) CheckoutToHotfix(name string) error {
 		return err
 	}
 
-	if err := b.stack.Push(bn); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -167,10 +135,6 @@ func (b *Branch) CheckoutToBugfix(name string) error {
 	bn := "bugfix/" + name
 
 	if err := b.git.CreateBranch(bn); err != nil {
-		return err
-	}
-
-	if err := b.stack.Push(bn); err != nil {
 		return err
 	}
 
@@ -195,10 +159,6 @@ func (b *Branch) CheckoutToDaily() error {
 		return err
 	}
 
-	if err := b.stack.Push(bn); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -206,30 +166,4 @@ type BranchStackIsHeadError struct{}
 
 func (e *BranchStackIsHeadError) Error() string {
 	return "branch stack is head"
-}
-
-func (b *Branch) ReturnToPrevious() error {
-	current, ok := b.stack.Top()
-	if !ok {
-		return &BranchStackIsHeadError{}
-	}
-
-	if _, err := b.stack.Pop(); err != nil {
-		return err
-	}
-
-	previous, ok := b.stack.Top()
-	if !ok {
-		return &BranchStackIsHeadError{}
-	}
-
-	if err := b.git.CheckoutBranch(previous); err != nil {
-		return err
-	}
-
-	if err := b.git.DeleteBranch(current); err != nil {
-		return err
-	}
-
-	return nil
 }
