@@ -83,7 +83,9 @@ var forkDailyAction = func(_ *kingpin.ParseContext) error {
 	return nil
 }
 
-var forkRevertAction = func(_ *kingpin.ParseContext) error {
+var switchCommandArgBranchName *string
+
+var switchAction = func(_ *kingpin.ParseContext) error {
 	path := "."
 
 	key, _ := GetAuthKeyFromConfig(path)
@@ -93,12 +95,7 @@ var forkRevertAction = func(_ *kingpin.ParseContext) error {
 		return err
 	}
 
-	b, err := NewBranch(path, g)
-	if err != nil {
-		return err
-	}
-
-	if err := b.ReturnToPrevious(); err != nil {
+	if err := g.CheckoutBranch(*switchCommandArgBranchName); err != nil {
 		return err
 	}
 

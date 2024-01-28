@@ -25,8 +25,9 @@ type Cli struct {
 		Hotfix   *kingpin.CmdClause
 		Bugfix   *kingpin.CmdClause
 		Daily    *kingpin.CmdClause
-		Revert   *kingpin.CmdClause
 	}
+
+	Switch *kingpin.CmdClause
 
 	Pull *kingpin.CmdClause
 
@@ -68,7 +69,8 @@ func NewCli() *Cli {
 
 	cli.Fork.Daily = forkCommand.Command("daily", "Fork a daily branch").Action(forkDailyAction)
 
-	cli.Fork.Revert = forkCommand.Command("revert", "Revert a branch").Action(forkRevertAction)
+	cli.Switch = kingpin.Command("switch", "Switch to a branch").Action(switchAction)
+	switchCommandArgBranchName = cli.Switch.Arg("name", "Name of the branch").Required().String()
 
 	cli.Pull = kingpin.Command("pull", "Pull changes from remote").Action(commitPullAction)
 
